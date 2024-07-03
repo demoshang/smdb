@@ -30,6 +30,8 @@ build/
 # dist
 dist/
 
+.tmp/
+
 # env
 .env.*
 !.env.example
