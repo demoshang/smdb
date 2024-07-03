@@ -31,9 +31,9 @@ class NedbCollection<T extends Document> extends Collection<T> {
     return {
       acknowledged: true,
       insertedCount: list.length,
-      insertedIds: list.map(({ _id }) => {
-        return _id;
-      }),
+      insertedIds: Object.fromEntries(list.map(({ _id }, index) => {
+        return [`${index}`, _id];
+      })),
     };
   }
 
@@ -162,6 +162,20 @@ class NedbCollection<T extends Document> extends Collection<T> {
 
   public async dropIndex(indexName: string) {
     await this.collection.removeIndexAsync(indexName);
+  }
+
+  public async listIndexes() {
+    const keys = await this.collection.getIndexesAsync();
+    return keys.map((key) => {
+      const arr = key.split(',');
+      return {
+        v: 0,
+        key: Object.fromEntries(arr.map((item) => {
+          return [item, 1];
+        })),
+        name: key,
+      };
+    });
   }
 
   public async drop() {

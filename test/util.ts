@@ -13,4 +13,12 @@ async function assertThrowsAsync(fn: Function, regExp: RegExp) {
   }
 }
 
-export { assertThrowsAsync };
+function pick(obj: Record<string, any>, keys: string[]) {
+  return Object.fromEntries(
+    keys.map((key) => {
+      return [key, obj[key]];
+    }),
+  );
+}
+
+export { assertThrowsAsync, pick };

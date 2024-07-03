@@ -77,6 +77,10 @@ class MongoCollection<T extends Document = Document> extends AbstractCollection<
     await this.collection.dropIndex(indexName);
   }
 
+  public async listIndexes() {
+    return this.collection.listIndexes().toArray();
+  }
+
   public async drop() {
     return this.collection.drop();
   }

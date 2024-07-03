@@ -60,6 +60,12 @@ export interface CreateIndexesOptions {
   expireAfterSeconds?: number;
 }
 
+export interface ListIndexesResult {
+  v: number;
+  key: Record<string, number>;
+  name: string;
+}
+
 // FIND
 export declare interface FindOptions {
   limit?: number;

@@ -6,6 +6,7 @@ import type {
   IndexSpecification,
   InsertManyResult,
   InsertOneResult,
+  ListIndexesResult,
   OptionalUnlessRequiredId,
   UpdateFilter,
   UpdateOptions,
@@ -31,7 +32,7 @@ abstract class Collection<T> {
     options?: UpdateOptions,
   ): Promise<UpdateResult<T>>;
 
-  public abstract findOne(query: Filter<T>, options?: FindOptions): Promise<T | null>;
+  public abstract findOne(query: Filter<T>, options?: FindOptions): Promise<(T & { _id?: any }) | null>;
   public abstract find(query: Filter<T>, options?: FindOptions): Promise<WithId<T>[]>;
 
   public abstract countDocuments(query?: Filter<T>): Promise<number>;
@@ -41,6 +42,7 @@ abstract class Collection<T> {
     options?: CreateIndexesOptions,
   ): Promise<string>;
   public abstract dropIndex(indexName: string): Promise<void>;
+  public abstract listIndexes(): Promise<ListIndexesResult[]>;
 
   public abstract drop(): Promise<boolean>;
 }

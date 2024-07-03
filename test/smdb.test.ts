@@ -4,7 +4,7 @@ import test from 'node:test';
 import assert from 'node:assert';
 import type { Collection, SubsetMongoUrl } from '../src';
 import { SubsetMongo } from '../src';
-import { assertThrowsAsync } from './util';
+import { assertThrowsAsync, pick } from './util';
 
 const urlList = [
   'mongodb://admin:password@localhost:27017,localhost:27027,localhost:27037/test?authSource=admin',
@@ -22,6 +22,8 @@ async function runTest(url: SubsetMongoUrl) {
   }>;
 
   const smdb = new SubsetMongo(url);
+
+  const isMongodb = url.startsWith('mongodb://');
 
   await test(url, async (t) => {
     t.before(async () => {
@@ -43,9 +45,10 @@ async function runTest(url: SubsetMongoUrl) {
     await t.test('insertOne && findOne', async () => {
       const name = `insertOne ${Date.now()}`;
 
-      await personCollection.insertOne({
+      const result = await personCollection.insertOne({
         name,
       });
+      assert.ok(result.insertedId);
 
       const nu = await personCollection.countDocuments({ name });
 
@@ -59,7 +62,7 @@ async function runTest(url: SubsetMongoUrl) {
       const name1 = `insert 1 ${Date.now()}`;
       const name2 = `insert 2 ${Date.now()}`;
 
-      await personCollection.insertMany([
+      const result = await personCollection.insertMany([
         {
           name: name1,
         },
@@ -67,6 +70,7 @@ async function runTest(url: SubsetMongoUrl) {
           name: name2,
         },
       ]);
+      assert.strictEqual(Object.keys(result.insertedIds).length, 2);
 
       const persons = await personCollection.find(
         {},
@@ -98,21 +102,29 @@ async function runTest(url: SubsetMongoUrl) {
       let nu = await personCollection.countDocuments({});
       assert.strictEqual(nu, 2);
 
-      await personCollection.updateMany({ age: 20 }, { $set: { age: 50 } });
+      const updateManyResult = await personCollection.updateMany({ age: 20 }, { $set: { age: 50 } });
+      assert.deepEqual(pick(updateManyResult, ['acknowledged', 'matchedCount', 'upsertedId']), { acknowledged: true, matchedCount: 2, upsertedId: null });
       nu = await personCollection.countDocuments({ age: 50 });
       assert.strictEqual(nu, 2);
 
-      await personCollection.updateOne({ age: 50 }, { $set: { age: 20 } });
+      const updateResult = await personCollection.updateOne({ age: 50 }, { $set: { age: 20 } });
+      assert.deepEqual(pick(updateResult, ['acknowledged', 'matchedCount', 'upsertedId']), { acknowledged: true, matchedCount: 1, upsertedId: null });
+
       nu = await personCollection.countDocuments({ age: 20 });
       assert.strictEqual(nu, 1);
 
-      await personCollection.updateOne(
+      const upsertResult = await personCollection.updateOne(
         { name: name3 },
-        { $set: { age: 20 } },
+        { $set: { age: 20 }, $setOnInsert: { tmp: 'tmp' } },
         { upsert: true },
       );
+      assert.ok(upsertResult.upsertedId);
       nu = await personCollection.countDocuments({ name: name3 });
       assert.strictEqual(nu, 1);
+
+      const doc = await personCollection.findOne({ name: name3 });
+      const { _id, ...tmp } = doc || {};
+      assert.deepEqual(tmp, { name: name3, age: 20, tmp: 'tmp' });
     });
 
     await t.test('deleteOne && deleteMany', async () => {
@@ -138,11 +150,13 @@ async function runTest(url: SubsetMongoUrl) {
       let nu = await personCollection.countDocuments({});
       assert.strictEqual(nu, 3);
 
-      await personCollection.deleteOne({ age: 20 });
+      let result = await personCollection.deleteOne({ age: 20 });
+      assert.strictEqual(result.deletedCount, 1);
       nu = await personCollection.countDocuments({});
       assert.strictEqual(nu, 2);
 
-      await personCollection.deleteMany({ age: 20 });
+      result = await personCollection.deleteMany({ age: 20 });
+      assert.strictEqual(result.deletedCount, 2);
       nu = await personCollection.countDocuments({});
       assert.strictEqual(nu, 0);
     });
@@ -165,15 +179,21 @@ async function runTest(url: SubsetMongoUrl) {
         );
       }, /unique|duplicate/);
 
-      try {
-        // mongodb
-        await personCollection.dropIndex('name_1');
-        // nedb
-        await personCollection.dropIndex('name');
-      } catch (e) {
+      await personCollection.createIndex({ name: 1, age: 1 }, { unique: true });
 
+      const indexList = await personCollection.listIndexes();
+
+      if (isMongodb) {
+        assert.deepEqual(['_id_', 'name_1', 'age_1', 'name_1_age_1'], indexList.map(({ name }) => {
+          return name;
+        }));
+      } else {
+        assert.deepEqual(['_id', 'name', 'age', 'age,name'], indexList.map(({ name }) => {
+          return name;
+        }));
       }
 
+      isMongodb ? await personCollection.dropIndex('name_1') : await personCollection.dropIndex('name');
       await personCollection.insertOne({ name: 'name' });
     });
 

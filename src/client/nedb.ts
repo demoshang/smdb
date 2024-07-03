@@ -68,7 +68,7 @@ class Nedb implements Client {
       const originCollection = await createOriginCollection(name, this.dbDir, {
         ...this.opts,
         ...opts,
-        timestampData: this.opts?.timestamp,
+        timestampData: this.opts?.timestamp ?? false,
       });
       const collection = new NedbCollection<T>(originCollection);
       deferred.resolve(collection);
