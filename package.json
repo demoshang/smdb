@@ -18,6 +18,7 @@
   "scripts": {
     "start": "node --loader @swc-node/register/esm index.ts",
     "test": "SWC_NODE_PROJECT=./tsconfig.test.json node --test --loader @swc-node/register/esm \"test/**/*.test.ts\"",
+    "test:coverage": "SWC_NODE_PROJECT=./tsconfig.test.json node --test --experimental-test-coverage --test-reporter=lcov --test-reporter-destination=.tmp/lcov.info --loader @swc-node/register/esm \"test/**/*.test.ts\" && genhtml .tmp/lcov.info -o .tmp/html && http-server .tmp/html -o",
     "watch": "nodemon --signal SIGHUP",
     "build": "pnpm run clean && concurrently npm:build:*",
     "build:bundle": "tsup index.ts --treeshake --sourcemap --shims --format esm,cjs --dts",
@@ -43,6 +44,7 @@
     "cpx2": "^5.0.0",
     "eslint": "^9.1.1",
     "eslint-plugin-format": "^0.1.1",
+    "http-server": "^14.1.1",
     "rimraf": "^5.0.5",
     "ts-node": "^10.9.2",
     "tsup": "^8.0.2",
