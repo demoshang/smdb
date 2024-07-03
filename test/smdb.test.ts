@@ -8,9 +8,9 @@ import { assertThrowsAsync, pick } from './util';
 
 const urlList = [
   'mongodb://admin:password@localhost:27017,localhost:27027,localhost:27037/test?authSource=admin',
-  'memory',
-  'memory://',
   'dir://./.tmp',
+  'memory://',
+  'memory',
 ] as const;
 
 async function runTest(url: SubsetMongoUrl) {
@@ -19,9 +19,12 @@ async function runTest(url: SubsetMongoUrl) {
     age?: number;
     gender?: string;
     hobbies?: string[];
+
+    createdAt?: Date;
+    updatedAt?: Date;
   }>;
 
-  const smdb = new SubsetMongo(url);
+  const smdb = new SubsetMongo(url, { timestamp: true });
 
   const isMongodb = url.startsWith('mongodb://');
 
@@ -33,9 +36,6 @@ async function runTest(url: SubsetMongoUrl) {
     t.after(async () => {
       await personCollection.drop();
       await smdb.disconnect();
-      await new Promise((resolve) => {
-        setTimeout(resolve, 1000);
-      });
     });
 
     t.beforeEach(async () => {
@@ -122,9 +122,27 @@ async function runTest(url: SubsetMongoUrl) {
       nu = await personCollection.countDocuments({ name: name3 });
       assert.strictEqual(nu, 1);
 
-      const doc = await personCollection.findOne({ name: name3 });
-      const { _id, ...tmp } = doc || {};
-      assert.deepEqual(tmp, { name: name3, age: 20, tmp: 'tmp' });
+      const doc1 = await personCollection.findOne({ name: name3 });
+      assert.deepEqual(pick(doc1, ['name', 'age', 'tmp']), { name: name3, age: 20, tmp: 'tmp' });
+      assert.ok(doc1?.createdAt);
+      assert.ok(doc1?.updatedAt);
+
+      await new Promise((rs) => {
+        setTimeout(rs, 1);
+      });
+
+      await personCollection.updateOne(
+        { name: name3 },
+        { $set: { age: 0 } },
+      );
+
+      const doc2 = await personCollection.findOne({ name: name3 });
+      assert.deepEqual(pick(doc2, ['name', 'age', 'tmp']), { name: name3, age: 0, tmp: 'tmp' });
+      assert.ok(doc2?.createdAt);
+      assert.ok(doc2?.updatedAt);
+
+      assert.ok(doc1.createdAt.getTime() === doc2.createdAt.getTime());
+      assert.ok(doc1.updatedAt.getTime() < doc2.updatedAt.getTime());
     });
 
     await t.test('deleteOne && deleteMany', async () => {

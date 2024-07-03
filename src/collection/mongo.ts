@@ -110,7 +110,7 @@ class MongoCollection<T extends Document = Document> extends AbstractCollection<
 
     const date = new Date();
 
-    if (!is$) {
+    if (!is$.length) {
       return {
         updatedAt: date,
         ...doc,
@@ -119,37 +119,36 @@ class MongoCollection<T extends Document = Document> extends AbstractCollection<
 
     if (keys.includes('$set') && keys.includes('$setOnInsert')) {
       return {
+        ...doc,
         $set: {
           updatedAt: date,
           ...doc.$set,
         },
         $setOnInsert: {
           createdAt: date,
-          updatedAt: date,
           ...doc.$setOnInsert,
         },
-        ...doc,
       };
     } else if (keys.includes('$set')) {
       return {
+        ...doc,
         $set: {
           updatedAt: date,
           ...doc.$set,
         },
         $setOnInsert: {
           createdAt: date,
-          updatedAt: date,
         },
-        ...doc,
       };
     } else {
       return {
-        updatedAt: date,
-        $setOnInsert: {
-          createdAt: date,
+        ...doc,
+        $set: {
           updatedAt: date,
         },
-        ...doc,
+        $setOnInsert: {
+          createdAt: date,
+        },
       };
     }
   }

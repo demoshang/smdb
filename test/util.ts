@@ -13,7 +13,11 @@ async function assertThrowsAsync(fn: Function, regExp: RegExp) {
   }
 }
 
-function pick(obj: Record<string, any>, keys: string[]) {
+function pick(obj: Record<string, any> | null, keys: string[]) {
+  if (!obj) {
+    return obj;
+  }
+
   return Object.fromEntries(
     keys.map((key) => {
       return [key, obj[key]];
