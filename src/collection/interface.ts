@@ -1,6 +1,6 @@
-import type { AlternativeType, FilterOperators, InferIdType, MatchKeysAndValues, OneOrMore, OnlyFieldsOfType, PullOperator, PushOperator, RootFilterOperators, SetFields, WithId } from 'mongodb';
+import type { AlternativeType, FilterOperators, FindOperators, InferIdType, MatchKeysAndValues, OneOrMore, OnlyFieldsOfType, PullOperator, PushOperator, RootFilterOperators, SetFields, WithId } from 'mongodb';
 
-export type { Document } from 'bson';
+export type Document = Parameters<FindOperators['replaceOne']>['0'];
 
 export type { DeleteResult, InsertManyResult, InsertOneResult, OptionalUnlessRequiredId, WithId } from 'mongodb';
 

@@ -11,9 +11,6 @@ importers:
       '@s4p/nedb':
         specifier: github:demoshang/nedb
         version: https://codeload.github.com/demoshang/nedb/tar.gz/61f4ca3584f9bc6be77c7c6bcfa94b2350b0b18d
-      bson:
-        specifier: ^6.8.0
-        version: 6.8.0
       mongodb:
         specifier: ^6.8.0
         version: 6.8.0
