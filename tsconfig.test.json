@@ -16,7 +16,7 @@
       "@/wechatCorp": ["src/wechat/corp/index.ts"]
     },
     "strict": true,
-    "declaration": true,
+    "declaration": false,
     // "rootDir": "./",
     "outDir": "./dist",
     "sourceMap": true,

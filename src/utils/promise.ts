@@ -1,9 +1,3 @@
-async function delay(ms: number) {
-  return new Promise((resolve) => {
-    setTimeout(resolve, ms);
-  });
-}
-
 interface Deferred<T> {
   promise: Promise<T>;
   resolve: (value: T | PromiseLike<T>) => void;
@@ -22,4 +16,4 @@ function defer<T>() {
   return { promise, resolve: resolve!, reject: reject! };
 }
 
-export { Deferred, defer, delay };
+export { Deferred, defer };

@@ -22,11 +22,8 @@ function urlToPath(url: string) {
   return url.replace(/^dir:\/\//, '');
 }
 
-function getCollectionPath(dbLocation: string, collectionName: string) {
-  if (dbLocation === 'memory') {
-    return dbLocation;
-  }
-  return `${pathResolve(dbLocation, collectionName)}.nedb`;
+function getCollectionPath(dbDir: string, collectionName: string) {
+  return `${pathResolve(dbDir, collectionName)}.nedb`;
 }
 
 async function createOriginCollection(
