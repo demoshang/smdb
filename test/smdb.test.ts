@@ -234,6 +234,26 @@ async function runTest(url: SubsetMongoUrl) {
       });
       assert.strictEqual(nu, 1);
 
+      nu = await personCollection.countDocuments({
+        name: {
+          $eq: 'name',
+        },
+      });
+      assert.strictEqual(nu, 1);
+
+      nu = await personCollection.countDocuments({
+        sex: {
+          $exists: true,
+        },
+      });
+      assert.strictEqual(nu, 0);
+      nu = await personCollection.countDocuments({
+        name: {
+          $exists: true,
+        },
+      });
+      assert.strictEqual(nu, 1);
+
       await personCollection.updateOne(
         { name: 'name' },
         { $set: { hobbies: ['a', 'b'] } },

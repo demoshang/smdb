@@ -4,9 +4,7 @@ export type Document = Parameters<FindOperators['replaceOne']>['0'];
 
 export type { DeleteResult, InsertManyResult, InsertOneResult, OptionalUnlessRequiredId, WithId } from 'mongodb';
 
-export declare type Condition<T> = AlternativeType<T> | Pick<FilterOperators<AlternativeType<T>>,
-// '$eq' | '$exists' |
-'$gt' | '$gte' | '$in' | '$lt' | '$lte' | '$ne' | '$nin' | '$not' | '$elemMatch' | '$size'>;
+export declare type Condition<T> = AlternativeType<T> | Pick<FilterOperators<AlternativeType<T>>, '$eq' | '$exists' | '$gt' | '$gte' | '$in' | '$lt' | '$lte' | '$ne' | '$nin' | '$not' | '$elemMatch' | '$size'>;
 
 export declare type Filter<TSchema> = {
   [P in keyof WithId<TSchema>]?: Condition<WithId<TSchema>[P]>;
