@@ -8,6 +8,12 @@
     "type": "git",
     "url": "https://github.com/demoshang/smdb.git"
   },
+  "keywords": [
+    "database",
+    "datastore",
+    "MongoDB",
+    "nedb"
+  ],
   "exports": {
     ".": {
       "import": "./dist/index.js",
@@ -27,7 +33,7 @@
     "watch": "nodemon --signal SIGHUP",
     "build": "pnpm run clean && concurrently npm:build:*",
     "build:bundle": "tsup index.ts --treeshake --sourcemap --shims --format esm,cjs --dts",
-    "build:copy": "cpx pnpm-lock.yaml dist/ && cat package.json | jq '{name,type,version,description,homepage,repository,exports,main,types,dependencies,module:.module}' > dist/package.json",
+    "build:copy": "cpx README.md dist/ && cat package.json | jq '{name,type,version,description,homepage,repository,exports,main,types,dependencies,keywords,module:.module}' > dist/package.json",
     "clean": "rimraf dist",
     "lint": "eslint ./src",
     "lint:fix": "eslint ./src --fix",
