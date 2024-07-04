@@ -8,7 +8,7 @@ export declare type Condition<T> = AlternativeType<T> | Pick<FilterOperators<Alt
 
 export declare type Filter<TSchema> = {
   [P in keyof WithId<TSchema>]?: Condition<WithId<TSchema>[P]>;
-} & Omit<RootFilterOperators<WithId<TSchema>>, '$text' | '$comment' | '$where' | '$nor'>;
+} & Omit<RootFilterOperators<WithId<TSchema>>, '$text' | '$comment' | '$nor'>;
 
 export declare type IntegerType = number | bigint;
 
@@ -19,7 +19,7 @@ export interface UpdateFilter<TSchema> {
   $inc?: OnlyFieldsOfType<TSchema, NumericType | undefined>;
   $min?: MatchKeysAndValues<TSchema>;
   $max?: MatchKeysAndValues<TSchema>;
-  // $mul?: OnlyFieldsOfType<TSchema, NumericType | undefined>;
+  $mul?: OnlyFieldsOfType<TSchema, NumericType | undefined>;
   $set?: MatchKeysAndValues<TSchema>;
   $setOnInsert?: MatchKeysAndValues<TSchema>;
   $unset?: OnlyFieldsOfType<TSchema, any, '' | true | 1>;

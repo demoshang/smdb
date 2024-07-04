@@ -254,6 +254,25 @@ async function runTest(url: SubsetMongoUrl) {
       });
       assert.strictEqual(nu, 1);
 
+      const p1 = await personCollection.findOne({ name: 'name' });
+      await new Promise((rs) => {
+        setTimeout(rs, 5);
+      });
+      await personCollection.updateOne({ name: 'name' }, { $inc: { age: 1 } });
+      const p2 = await personCollection.findOne({ name: 'name' });
+
+      assert.ok((p1?.updatedAt || 0) < (p2?.updatedAt || 0));
+      assert.strictEqual(p2?.age, 21);
+
+      const p3 = await personCollection.findOne({ $where() {
+        return (this.age === p2.age);
+      } });
+      assert.strictEqual(`${p2._id}`, `${p3?._id}`);
+
+      await personCollection.updateOne({ name: 'name' }, { $mul: { age: 2 } });
+      const p4 = await personCollection.findOne({ name: 'name' });
+      assert.strictEqual(p4?.age, 42);
+
       await personCollection.updateOne(
         { name: 'name' },
         { $set: { hobbies: ['a', 'b'] } },
