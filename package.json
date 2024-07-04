@@ -35,7 +35,7 @@
     "prettier:fix": "prettier --write '**/*.{ts,json,md}'"
   },
   "dependencies": {
-    "@s4p/nedb": "github:demoshang/nedb",
+    "@s4p/nedb": "^1.0.2",
     "mongodb": "^6.8.0"
   },
   "devDependencies": {

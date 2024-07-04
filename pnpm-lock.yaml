@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@s4p/nedb':
-        specifier: github:demoshang/nedb
-        version: https://codeload.github.com/demoshang/nedb/tar.gz/91644d0c4550f6069ab2f1f8dffa924f36c8f28a
+        specifier: ^1.0.2
+        version: 1.0.2
       mongodb:
         specifier: ^6.8.0
         version: 6.8.0
@@ -474,9 +474,8 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@s4p/nedb@https://codeload.github.com/demoshang/nedb/tar.gz/91644d0c4550f6069ab2f1f8dffa924f36c8f28a':
-    resolution: {tarball: https://codeload.github.com/demoshang/nedb/tar.gz/91644d0c4550f6069ab2f1f8dffa924f36c8f28a}
-    version: 1.0.1
+  '@s4p/nedb@1.0.2':
+    resolution: {integrity: sha512-k4MHzqSiE0cv+YsqobjUaPnggsLKCfoJ+1uSaW2g5mUo8mlAUAPTuKaDse7DqNhhHLyJDkn9T7AMzbbHyWaZkg==, tarball: https://registry.npmjs.org/@s4p/nedb/-/nedb-1.0.2.tgz}
 
   '@seald-io/binary-search-tree@1.0.3':
     resolution: {integrity: sha512-qv3jnwoakeax2razYaMsGI/luWdliBLHTdC6jU55hQt1hcFqzauH/HsBollQ7IR4ySTtYhT+xyHoijpA16C+tA==, tarball: https://registry.npmjs.org/@seald-io/binary-search-tree/-/binary-search-tree-1.0.3.tgz}
@@ -3071,7 +3070,7 @@ snapshots:
   '@rollup/rollup-win32-x64-msvc@4.18.0':
     optional: true
 
-  '@s4p/nedb@https://codeload.github.com/demoshang/nedb/tar.gz/91644d0c4550f6069ab2f1f8dffa924f36c8f28a':
+  '@s4p/nedb@1.0.2':
     dependencies:
       '@seald-io/binary-search-tree': 1.0.3
       localforage: 1.10.0
