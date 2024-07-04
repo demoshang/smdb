@@ -1,7 +1,7 @@
 {
-  "name": "smdb",
+  "name": "@s4p/smdb",
   "type": "module",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Subset of MongoDB's API (the most used operations)",
   "homepage": "https://github.com/demoshang/smdb",
   "repository": {
