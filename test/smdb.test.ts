@@ -7,7 +7,7 @@ import { SubsetMongo } from '../src';
 import { assertThrowsAsync, pick } from './util';
 
 const urlList = [
-  'mongodb://admin:password@localhost:27017,localhost:27027,localhost:27037/test?authSource=admin',
+  'mongodb://admin:password@localhost:27017/test?authSource=admin',
   'dir://./.tmp',
   'memory://',
   'memory',

@@ -3,6 +3,11 @@
   "type": "module",
   "version": "0.0.1",
   "description": "Subset of MongoDB's API (the most used operations)",
+  "homepage": "https://github.com/demoshang/smdb",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/demoshang/smdb.git"
+  },
   "exports": {
     ".": {
       "import": "./dist/index.js",
@@ -17,12 +22,12 @@
   ],
   "scripts": {
     "start": "node --loader @swc-node/register/esm index.ts",
-    "test": "SWC_NODE_PROJECT=./tsconfig.test.json node --test --loader @swc-node/register/esm \"test/**/*.test.ts\"",
+    "test": "SWC_NODE_PROJECT=./tsconfig.test.json node --test --loader @swc-node/register/esm \"test/smdb.test.ts\"",
     "test:coverage": "SWC_NODE_PROJECT=./tsconfig.test.json node --test --experimental-test-coverage --test-reporter=lcov --test-reporter-destination=.tmp/lcov.info --loader @swc-node/register/esm \"test/**/*.test.ts\" && genhtml .tmp/lcov.info -o .tmp/html && http-server .tmp/html -o",
     "watch": "nodemon --signal SIGHUP",
     "build": "pnpm run clean && concurrently npm:build:*",
     "build:bundle": "tsup index.ts --treeshake --sourcemap --shims --format esm,cjs --dts",
-    "build:copy": "cpx src/view/**/* dist/view/ && cpx package.json dist/ && cpx pnpm-lock.yaml dist/",
+    "build:copy": "cpx pnpm-lock.yaml dist/ && cat package.json | jq '{name,type,version,description,homepage,repository,exports,main,types,dependencies,module:.module}' > dist/package.json",
     "clean": "rimraf dist",
     "lint": "eslint ./src",
     "lint:fix": "eslint ./src --fix",
