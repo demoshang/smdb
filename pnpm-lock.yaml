@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@s4p/nedb':
-        specifier: ^1.0.3
-        version: 1.0.3
+        specifier: ^1.0.4
+        version: 1.0.4
       mongodb:
         specifier: ^6.8.0
         version: 6.8.0
@@ -474,8 +474,8 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@s4p/nedb@1.0.3':
-    resolution: {integrity: sha512-zBJuWxZ7BRoshWrU9c4PgkBAuU/7K10MWI3oF/HgEoVVet6x31kte0PZdKILhYRLvlYCkOPy4IvsfKCVHuab7g==, tarball: https://registry.npmjs.org/@s4p/nedb/-/nedb-1.0.3.tgz}
+  '@s4p/nedb@1.0.4':
+    resolution: {integrity: sha512-+PjvpjH9tANM4o5WKemIGR4bzmu76HURl/8PM4qoRLVSnYmQEEuGB6pJQ5rg+BQZdvanklJDZQvW+NTv7DGeOw==, tarball: https://registry.npmjs.org/@s4p/nedb/-/nedb-1.0.4.tgz}
 
   '@seald-io/binary-search-tree@1.0.3':
     resolution: {integrity: sha512-qv3jnwoakeax2razYaMsGI/luWdliBLHTdC6jU55hQt1hcFqzauH/HsBollQ7IR4ySTtYhT+xyHoijpA16C+tA==, tarball: https://registry.npmjs.org/@seald-io/binary-search-tree/-/binary-search-tree-1.0.3.tgz}
@@ -3061,7 +3061,7 @@ snapshots:
   '@rollup/rollup-win32-x64-msvc@4.18.0':
     optional: true
 
-  '@s4p/nedb@1.0.3':
+  '@s4p/nedb@1.0.4':
     dependencies:
       '@seald-io/binary-search-tree': 1.0.3
       localforage: 1.10.0

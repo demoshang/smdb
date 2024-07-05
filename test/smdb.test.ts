@@ -128,7 +128,7 @@ async function runTest(url: SubsetMongoUrl) {
       assert.ok(doc1?.updatedAt);
 
       await new Promise((rs) => {
-        setTimeout(rs, 1);
+        setTimeout(rs, 5);
       });
 
       await personCollection.updateOne(
@@ -224,7 +224,26 @@ async function runTest(url: SubsetMongoUrl) {
       nu = await personCollection.countDocuments({
         $and: [{ age: { $gte: 20 } }, { name: 'name' }],
       });
+      assert.strictEqual(nu, 1);
 
+      nu = await personCollection.countDocuments({
+        name: /naM/i,
+      });
+      assert.strictEqual(nu, 1);
+
+      nu = await personCollection.countDocuments({
+        name: {
+          $regex: 'naM',
+          $options: 'i',
+        },
+      });
+      assert.strictEqual(nu, 1);
+
+      nu = await personCollection.countDocuments({
+        age: {
+          $mod: [19, 1],
+        },
+      });
       assert.strictEqual(nu, 1);
 
       nu = await personCollection.countDocuments({
