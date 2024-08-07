@@ -12,7 +12,7 @@ import type {
   UpdateOptions,
   UpdateResult,
   WithId,
-} from './interface';
+} from '../types/interface';
 
 abstract class Collection<T> {
   public abstract insertOne(doc: OptionalUnlessRequiredId<T>): Promise<InsertOneResult>;

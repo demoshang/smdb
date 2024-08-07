@@ -1,5 +1,4 @@
 import type Nedb from '@s4p/nedb';
-import { Collection } from './collection';
 import type {
   CreateIndexesOptions,
   Document,
@@ -9,7 +8,8 @@ import type {
   OptionalUnlessRequiredId,
   UpdateFilter,
   UpdateOptions,
-} from './interface';
+} from '../types/interface';
+import { Collection } from './collection';
 
 class NedbCollection<T extends Document> extends Collection<T> {
   constructor(private collection: Nedb) {

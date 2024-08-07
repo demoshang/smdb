@@ -1,8 +1,6 @@
-import type { AlternativeType, FilterOperators, FindOperators, InferIdType, MatchKeysAndValues, OneOrMore, OnlyFieldsOfType, PullOperator, PushOperator, RootFilterOperators, SetFields, WithId } from 'mongodb';
+import type { AlternativeType, Document, FilterOperators, InferIdType, MatchKeysAndValues, OneOrMore, OnlyFieldsOfType, PullOperator, PushOperator, RootFilterOperators, SetFields, WithId } from './mongo-type';
 
-export type Document = Parameters<FindOperators['replaceOne']>['0'];
-
-export type { DeleteResult, InsertManyResult, InsertOneResult, OptionalUnlessRequiredId, WithId } from 'mongodb';
+export type { DeleteResult, Document, InsertManyResult, InsertOneResult, Collection as MCollection, OptionalUnlessRequiredId, WithId } from './mongo-type';
 
 export declare type Condition<T> = AlternativeType<T> | Pick<FilterOperators<AlternativeType<T>>, '$mod' | '$eq' | '$exists' | '$gt' | '$gte' | '$in' | '$lt' | '$lte' | '$ne' | '$nin' | '$not' | '$elemMatch' | '$size' | '$regex' | '$options'>;
 
@@ -79,4 +77,3 @@ export declare type Sort = string | Exclude<SortDirection, {
 }> | string[] | {
   [key: string]: SortDirection;
 } | Map<string, SortDirection> | [string, SortDirection][] | [string, SortDirection];
-// FIND

@@ -1,8 +1,8 @@
-import type { CollectionOptions, MongoClientOptions } from 'mongodb';
 import { MongoClient } from 'mongodb';
 
 import type { Document } from '../collection';
 import { MongoCollection } from '../collection';
+import { CollectionOptions, MongoClientOptions } from '../types/mongo-type';
 import type { Client } from './client';
 import { type Deferred, defer } from '@/utils/promise';
 
@@ -20,7 +20,7 @@ class Mongodb implements Client {
 
     (async () => {
       try {
-        const client = await MongoClient.connect(this.url, opts);
+        const client = await MongoClient.connect(this.url, opts as any);
 
         this.deferred.resolve(client);
       } catch (e) {
@@ -59,4 +59,4 @@ class Mongodb implements Client {
   }
 }
 
-export { Mongodb, MongoClientOptions, CollectionOptions };
+export { CollectionOptions, MongoClientOptions, Mongodb };

@@ -1,7 +1,5 @@
-import type { Collection } from 'mongodb';
-
-import { Collection as AbstractCollection } from './collection';
 import type {
+  MCollection as Collection,
   CreateIndexesOptions,
   Document,
   Filter,
@@ -10,7 +8,9 @@ import type {
   OptionalUnlessRequiredId,
   UpdateFilter,
   UpdateOptions,
-} from './interface';
+} from '../types/interface';
+
+import { Collection as AbstractCollection } from './collection';
 
 class MongoCollection<T extends Document = Document> extends AbstractCollection<T> {
   constructor(private collection: Collection<T>, private timestamp?: boolean) {

@@ -72,3 +72,9 @@ drop(): Promise<boolean>;
 ## License
 
 MIT
+
+## 如何生成mongodb类型
+
+```bash
+pnpm exec dts-bundle-generator -o my.d.ts ./index.ts --external-inlines mongodb --external-inlines bson
+```
