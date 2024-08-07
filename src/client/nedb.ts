@@ -43,6 +43,16 @@ async function createOriginCollection(
   return db;
 }
 
+async function importNedb() {
+  if (typeof window !== 'undefined') {
+    await import('@s4p/nedb/browser-version/out/nedb.min.js');
+    return (window as any).Nedb;
+  } else {
+    const { default: Datastore } = await import('@s4p/nedb');
+    return Datastore;
+  }
+}
+
 class Nedb implements Client {
   private collections: {
     [key: string]: Deferred<NedbCollection<any>>;
@@ -65,7 +75,7 @@ class Nedb implements Client {
     this.collections[name] = deferred;
 
     try {
-      const { default: Datastore } = await import('@s4p/nedb');
+      const Datastore = await importNedb();
 
       const originCollection = await createOriginCollection(Datastore, name, this.dbDir, {
         ...this.opts,
