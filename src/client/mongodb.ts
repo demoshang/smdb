@@ -19,12 +19,11 @@ class Mongodb implements Client {
 
   private timestamp?: boolean;
 
-  constructor(private url: string, { timestamp, ...opts }: { timestamp?: boolean } & MongoClientOptions = {}) {
+  constructor(MongoClient: any, private url: string, { timestamp, ...opts }: { timestamp?: boolean } & MongoClientOptions = {}) {
     this.timestamp = timestamp;
 
     (async () => {
       try {
-        const { MongoClient } = await import('mongodb');
         const client = await MongoClient.connect(this.url, opts as any);
 
         this.deferred.resolve(client);

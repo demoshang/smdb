@@ -1,7 +1,7 @@
 {
   "name": "@s4p/smdb",
   "type": "module",
-  "version": "0.0.5",
+  "version": "0.1.0",
   "description": "Subset of MongoDB's API (the most used operations)",
   "homepage": "https://github.com/demoshang/smdb",
   "repository": {
@@ -32,7 +32,7 @@
     "test:coverage": "SWC_NODE_PROJECT=./tsconfig.test.json node --test --experimental-test-coverage --test-reporter=lcov --test-reporter-destination=.tmp/lcov.info --loader @swc-node/register/esm \"test/**/*.test.ts\" && genhtml .tmp/lcov.info -o .tmp/html && http-server .tmp/html -o",
     "watch": "nodemon --signal SIGHUP",
     "build": "pnpm run clean && concurrently npm:build:*",
-    "build:bundle": "tsup index.ts --treeshake --sourcemap --shims --minify --format esm,cjs,iife --dts",
+    "build:bundle": "tsup index.ts --treeshake --sourcemap --shims --format esm,cjs,iife --dts",
     "build:copy": "cpx README.md dist/ && cat package.json | jq '{name,type,version,description,homepage,repository,exports,main,types,optionalDependencies,dependencies,keywords,module:.module} | walk(if type == \"string\" and contains(\"./dist/\") then gsub(\"./dist/\"; \"./\") else . end)' > dist/package.json",
     "clean": "rimraf dist",
     "lint": "eslint ./src",

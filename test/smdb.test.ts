@@ -13,6 +13,21 @@ const urlList = [
   'memory',
 ] as const;
 
+async function importNedb() {
+  if (typeof window !== 'undefined') {
+    await import('@s4p/nedb/browser-version/out/nedb.min.js');
+    return (window as any).Nedb;
+  } else {
+    const { default: Datastore } = await import('@s4p/nedb');
+    return Datastore;
+  }
+}
+
+async function importMongodb() {
+  const { MongoClient } = await import('mongodb');
+  return MongoClient;
+}
+
 async function runTest(url: SubsetMongoUrl) {
   let personCollection!: Collection<{
     name?: string;
@@ -24,9 +39,11 @@ async function runTest(url: SubsetMongoUrl) {
     updatedAt?: Date;
   }>;
 
-  const smdb = new SubsetMongo(url, { timestamp: true });
-
   const isMongodb = url.startsWith('mongodb://');
+
+  const Driver = isMongodb ? await importMongodb() : await importNedb();
+  const smdb = new SubsetMongo(Driver);
+  smdb.connect(url, { timestamp: true });
 
   await test(url, async (t) => {
     t.before(() => {

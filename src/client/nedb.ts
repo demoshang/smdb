@@ -42,16 +42,6 @@ async function createOriginCollection(
   return db;
 }
 
-async function importNedb() {
-  if (typeof window !== 'undefined') {
-    await import('@s4p/nedb/browser-version/out/nedb.min.js');
-    return (window as any).Nedb;
-  } else {
-    const { default: Datastore } = await import('@s4p/nedb');
-    return Datastore;
-  }
-}
-
 class Nedb implements Client {
   private collections: {
     [key: string]: NedbCollection<any>;
@@ -59,7 +49,7 @@ class Nedb implements Client {
 
   private dbDir: string;
 
-  constructor(url: string, private opts?: DataStoreOptions & { timestamp?: boolean }) {
+  constructor(private Datastore: any, url: string, private opts?: DataStoreOptions & { timestamp?: boolean }) {
     this.dbDir = urlToPath(url);
   }
 
@@ -74,9 +64,7 @@ class Nedb implements Client {
   }
 
   private async getOriginCollection(name: string, opts?: DataStoreOptions) {
-    const Datastore = await importNedb();
-
-    const originCollection = await createOriginCollection(Datastore, name, this.dbDir, {
+    const originCollection = await createOriginCollection(this.Datastore, name, this.dbDir, {
       ...this.opts,
       ...opts,
       timestampData: this.opts?.timestamp ?? false,
