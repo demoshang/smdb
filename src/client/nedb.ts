@@ -1,8 +1,7 @@
 import { resolve as pathResolve } from 'node:path';
-import Datastore from '@s4p/nedb';
 
-import { NedbCollection } from '../collection/nedb';
 import type { Document } from '../collection';
+import { NedbCollection } from '../collection/nedb';
 import type { Client } from './client';
 import { type Deferred, defer } from '@/utils/promise';
 
@@ -27,11 +26,12 @@ function getCollectionPath(dbDir: string, collectionName: string) {
 }
 
 async function createOriginCollection(
+  Datastore: any,
   collectionName: string,
   dbDir: string,
   { timestampData = true }: { timestampData?: boolean } = {},
 ) {
-  let db: Datastore;
+  let db;
   if (dbDir === 'memory' || dbDir === 'memory://') {
     db = new Datastore({ inMemoryOnly: true, timestampData });
   } else {
@@ -65,7 +65,9 @@ class Nedb implements Client {
     this.collections[name] = deferred;
 
     try {
-      const originCollection = await createOriginCollection(name, this.dbDir, {
+      const { default: Datastore } = await import('@s4p/nedb');
+
+      const originCollection = await createOriginCollection(Datastore, name, this.dbDir, {
         ...this.opts,
         ...opts,
         timestampData: this.opts?.timestamp ?? false,
@@ -80,4 +82,4 @@ class Nedb implements Client {
   }
 }
 
-export { Nedb, DataStoreOptions };
+export { DataStoreOptions, Nedb };

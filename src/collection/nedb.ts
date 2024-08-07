@@ -1,18 +1,18 @@
-import type Nedb from '@s4p/nedb';
 import type {
   CreateIndexesOptions,
   Document,
   Filter,
   FindOptions,
   IndexSpecification,
+  NedbDatastore,
   OptionalUnlessRequiredId,
   UpdateFilter,
   UpdateOptions,
-} from '../types/interface';
+} from '../lib-types/interface';
 import { Collection } from './collection';
 
 class NedbCollection<T extends Document> extends Collection<T> {
-  constructor(private collection: Nedb) {
+  constructor(private collection: NedbDatastore) {
     super();
   }
 

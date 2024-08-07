@@ -2,6 +2,8 @@ import type { AlternativeType, Document, FilterOperators, InferIdType, MatchKeys
 
 export type { DeleteResult, Document, InsertManyResult, InsertOneResult, Collection as MCollection, OptionalUnlessRequiredId, WithId } from './mongo-type';
 
+export type { Nedb as NedbDatastore } from './nedb';
+
 export declare type Condition<T> = AlternativeType<T> | Pick<FilterOperators<AlternativeType<T>>, '$mod' | '$eq' | '$exists' | '$gt' | '$gte' | '$in' | '$lt' | '$lte' | '$ne' | '$nin' | '$not' | '$elemMatch' | '$size' | '$regex' | '$options'>;
 
 export declare type Filter<TSchema> = {

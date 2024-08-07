@@ -5708,4 +5708,4 @@ declare class WriteError {
 	toString(): string;
 }
 
-export {  Document, DeleteResult, InsertManyResult, InsertOneResult, OptionalUnlessRequiredId, Collection, AlternativeType, CollectionOptions, FilterOperators, FindOperators, InferIdType, MatchKeysAndValues, MongoClientOptions, OneOrMore, OnlyFieldsOfType, PullOperator, PushOperator, RootFilterOperators, SetFields, WithId, UpdateResult };
+export type { AlternativeType, Collection, CollectionOptions, DeleteResult, Document, FilterOperators, FindOperators, InferIdType, InsertManyResult, InsertOneResult, MatchKeysAndValues, MongoClientOptions, OneOrMore, OnlyFieldsOfType, OptionalUnlessRequiredId, PullOperator, PushOperator, RootFilterOperators, SetFields, UpdateResult, WithId };

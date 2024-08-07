@@ -8,7 +8,7 @@ import type {
   OptionalUnlessRequiredId,
   UpdateFilter,
   UpdateOptions,
-} from '../types/interface';
+} from '../lib-types/interface';
 
 import { Collection as AbstractCollection } from './collection';
 

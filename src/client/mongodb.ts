@@ -1,17 +1,21 @@
-import { MongoClient } from 'mongodb';
-
 import type { Document } from '../collection';
 import { MongoCollection } from '../collection';
-import { CollectionOptions, MongoClientOptions } from '../types/mongo-type';
+import type { CollectionOptions, MongoClientOptions } from '../lib-types/mongo-type';
 import type { Client } from './client';
 import { type Deferred, defer } from '@/utils/promise';
+
+interface MClient {
+  connect: (url: string, opts?: any) => Promise<any>;
+  close: () => void;
+  db: () => any;
+}
 
 class Mongodb implements Client {
   private collections: {
     [key: string]: Deferred<MongoCollection<any>>;
   } = {};
 
-  private deferred: Deferred<MongoClient> = defer<MongoClient>();
+  private deferred: Deferred<MClient> = defer<MClient>();
 
   private timestamp?: boolean;
 
@@ -20,6 +24,7 @@ class Mongodb implements Client {
 
     (async () => {
       try {
+        const { MongoClient } = await import('mongodb');
         const client = await MongoClient.connect(this.url, opts as any);
 
         this.deferred.resolve(client);
