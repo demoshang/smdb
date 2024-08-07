@@ -12,7 +12,7 @@ interface MClient {
 
 class Mongodb implements Client {
   private collections: {
-    [key: string]: Deferred<MongoCollection<any>>;
+    [key: string]: MongoCollection<any>;
   } = {};
 
   private deferred: Deferred<MClient> = defer<MClient>();
@@ -43,24 +43,17 @@ class Mongodb implements Client {
     }
   }
 
-  public async getCollection<T extends Document>(name: string, opts?: CollectionOptions) {
-    if (this.collections[name]) {
-      return this.collections[name].promise;
+  public getCollection<T extends Document>(name: string, opts?: CollectionOptions) {
+    if (!this.collections[name]) {
+      this.collections[name] = new MongoCollection<T>(this.getOriginCollection(name, opts), this.timestamp);
     }
+    return this.collections[name];
+  }
 
-    const deferred = defer<MongoCollection<T>>();
-    this.collections[name] = deferred;
-
-    try {
-      const client = await this.deferred.promise;
-      const originCollection = client.db().collection(name, opts);
-      const collection = new MongoCollection<T>(originCollection as any, this.timestamp);
-      deferred.resolve(collection);
-    } catch (e) {
-      deferred.reject(e);
-    }
-
-    return deferred.promise;
+  private async getOriginCollection(name: string, opts?: CollectionOptions) {
+    const client = await this.deferred.promise;
+    const originCollection = client.db().collection(name, opts);
+    return originCollection as any;
   }
 }
 

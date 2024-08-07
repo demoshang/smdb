@@ -3,7 +3,6 @@ import { resolve as pathResolve } from 'node:path';
 import type { Document } from '../collection';
 import { NedbCollection } from '../collection/nedb';
 import type { Client } from './client';
-import { type Deferred, defer } from '@/utils/promise';
 
 interface DataStoreOptions {
   inMemoryOnly?: boolean;
@@ -55,7 +54,7 @@ async function importNedb() {
 
 class Nedb implements Client {
   private collections: {
-    [key: string]: Deferred<NedbCollection<any>>;
+    [key: string]: NedbCollection<any>;
   } = {};
 
   private dbDir: string;
@@ -66,29 +65,24 @@ class Nedb implements Client {
 
   public async disconnect() {}
 
-  public async getCollection<T extends Document>(name: string, opts?: DataStoreOptions): Promise<NedbCollection<T>> {
-    if (this.collections[name]) {
-      return this.collections[name].promise;
+  public getCollection<T extends Document>(name: string, opts?: DataStoreOptions): NedbCollection<T> {
+    if (!this.collections[name]) {
+      this.collections[name] = new NedbCollection<T>(this.getOriginCollection(name, opts));
     }
 
-    const deferred = defer<NedbCollection<T>>();
-    this.collections[name] = deferred;
+    return this.collections[name];
+  }
 
-    try {
-      const Datastore = await importNedb();
+  private async getOriginCollection(name: string, opts?: DataStoreOptions) {
+    const Datastore = await importNedb();
 
-      const originCollection = await createOriginCollection(Datastore, name, this.dbDir, {
-        ...this.opts,
-        ...opts,
-        timestampData: this.opts?.timestamp ?? false,
-      });
-      const collection = new NedbCollection<T>(originCollection);
-      deferred.resolve(collection);
-    } catch (e) {
-      deferred.reject(e);
-    }
+    const originCollection = await createOriginCollection(Datastore, name, this.dbDir, {
+      ...this.opts,
+      ...opts,
+      timestampData: this.opts?.timestamp ?? false,
+    });
 
-    return deferred.promise;
+    return originCollection;
   }
 }
 

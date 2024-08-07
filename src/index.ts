@@ -18,7 +18,7 @@ class SubsetMongo {
     return this.client.disconnect();
   }
 
-  public async collection(name: string, options?: any) {
+  public collection(name: string, options?: any) {
     return this.client.getCollection(name, options);
   }
 }

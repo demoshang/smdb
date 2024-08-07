@@ -12,12 +12,13 @@ import type {
 import { Collection } from './collection';
 
 class NedbCollection<T extends Document> extends Collection<T> {
-  constructor(private collection: NedbDatastore) {
+  constructor(private collection: Promise<NedbDatastore>) {
     super();
   }
 
   public async insertOne(doc: OptionalUnlessRequiredId<T>) {
-    const newDoc = await this.collection.insertAsync(doc);
+    const collection = await this.collection;
+    const newDoc = await collection.insertAsync(doc);
 
     return {
       acknowledged: true,
@@ -26,7 +27,8 @@ class NedbCollection<T extends Document> extends Collection<T> {
   }
 
   public async insertMany(docs: OptionalUnlessRequiredId<T>[]) {
-    const list = await this.collection.insertAsync(docs);
+    const collection = await this.collection;
+    const list = await collection.insertAsync(docs);
 
     return {
       acknowledged: true,
@@ -38,7 +40,8 @@ class NedbCollection<T extends Document> extends Collection<T> {
   }
 
   public async deleteOne(filter: Filter<T>) {
-    const numRemoved = await this.collection.removeAsync(filter, {
+    const collection = await this.collection;
+    const numRemoved = await collection.removeAsync(filter, {
       multi: false,
     });
     return {
@@ -48,7 +51,8 @@ class NedbCollection<T extends Document> extends Collection<T> {
   }
 
   public async deleteMany(filter: Filter<T>) {
-    const numRemoved = await this.collection.removeAsync(filter, {
+    const collection = await this.collection;
+    const numRemoved = await collection.removeAsync(filter, {
       multi: true,
     });
     return {
@@ -62,12 +66,13 @@ class NedbCollection<T extends Document> extends Collection<T> {
     document: UpdateFilter<T>,
     options?: UpdateOptions,
   ) {
+    const collection = await this.collection;
     const { numAffected, upsert, affectedDocuments }
-      = await this.collection.updateAsync(filter, document, {
-        ...options,
-        multi: false,
-        returnUpdatedDocs: true,
-      });
+    = await collection.updateAsync(filter, document, {
+      ...options,
+      multi: false,
+      returnUpdatedDocs: true,
+    });
 
     return {
       acknowledged: true,
@@ -81,12 +86,13 @@ class NedbCollection<T extends Document> extends Collection<T> {
     document: UpdateFilter<T>,
     options?: UpdateOptions,
   ) {
+    const collection = await this.collection;
     const { numAffected, upsert, affectedDocuments }
-      = await this.collection.updateAsync(filter, document, {
-        ...options,
-        multi: true,
-        returnUpdatedDocs: true,
-      });
+    = await collection.updateAsync(filter, document, {
+      ...options,
+      multi: true,
+      returnUpdatedDocs: true,
+    });
 
     return {
       acknowledged: true,
@@ -110,7 +116,8 @@ class NedbCollection<T extends Document> extends Collection<T> {
     query: Filter<T>,
     { projection, sort, skip, limit }: FindOptions = {},
   ) {
-    let cursor = this.collection.findAsync(query);
+    const collection = await this.collection;
+    let cursor = collection.findAsync(query);
 
     if (projection) {
       cursor.projection(projection);
@@ -133,7 +140,8 @@ class NedbCollection<T extends Document> extends Collection<T> {
   }
 
   public async countDocuments(query: Filter<T>) {
-    const count = await this.collection.countAsync(query);
+    const collection = await this.collection;
+    const count = await collection.countAsync(query);
 
     return count;
   }
@@ -152,7 +160,8 @@ class NedbCollection<T extends Document> extends Collection<T> {
       fieldName = Object.keys(fieldOrSpec);
     }
 
-    await this.collection.ensureIndexAsync({
+    const collection = await this.collection;
+    await collection.ensureIndexAsync({
       fieldName,
       ...options,
     });
@@ -161,11 +170,13 @@ class NedbCollection<T extends Document> extends Collection<T> {
   }
 
   public async dropIndex(indexName: string) {
-    await this.collection.removeIndexAsync(indexName);
+    const collection = await this.collection;
+    await collection.removeIndexAsync(indexName);
   }
 
   public async listIndexes() {
-    const keys = await this.collection.getIndexesAsync();
+    const collection = await this.collection;
+    const keys = await collection.getIndexesAsync();
     return keys.map((key) => {
       const arr = key.split(',');
       return {
@@ -179,8 +190,10 @@ class NedbCollection<T extends Document> extends Collection<T> {
   }
 
   public async drop() {
-    await this.collection.dropDatabaseAsync();
-    await this.collection.loadDatabaseAsync();
+    const collection = await this.collection;
+
+    await collection.dropDatabaseAsync();
+    await collection.loadDatabaseAsync();
     return true;
   }
 }

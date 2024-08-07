@@ -29,8 +29,8 @@ async function runTest(url: SubsetMongoUrl) {
   const isMongodb = url.startsWith('mongodb://');
 
   await test(url, async (t) => {
-    t.before(async () => {
-      personCollection = await smdb.collection('person');
+    t.before(() => {
+      personCollection = smdb.collection('person');
     });
 
     t.after(async () => {

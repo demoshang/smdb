@@ -13,16 +13,18 @@ import type {
 import { Collection as AbstractCollection } from './collection';
 
 class MongoCollection<T extends Document = Document> extends AbstractCollection<T> {
-  constructor(private collection: Collection<T>, private timestamp?: boolean) {
+  constructor(private collection: Promise< Collection<T>>, private timestamp?: boolean) {
     super();
   }
 
   public async insertOne(doc: OptionalUnlessRequiredId<T>) {
-    return this.collection.insertOne(this.appendCreateTimestamp(doc));
+    const collection = await this.collection;
+    return collection.insertOne(this.appendCreateTimestamp(doc));
   }
 
   public async insertMany(docs: OptionalUnlessRequiredId<T>[]) {
-    return this.collection.insertMany(
+    const collection = await this.collection;
+    return collection.insertMany(
       docs.map((v) => {
         return this.appendCreateTimestamp(v);
       }),
@@ -30,11 +32,13 @@ class MongoCollection<T extends Document = Document> extends AbstractCollection<
   }
 
   public async deleteOne(filter: Filter<T>) {
-    return this.collection.deleteOne(filter);
+    const collection = await this.collection;
+    return collection.deleteOne(filter);
   }
 
   public async deleteMany(filter: Filter<T>) {
-    return this.collection.deleteMany(filter);
+    const collection = await this.collection;
+    return collection.deleteMany(filter);
   }
 
   public async updateOne(
@@ -42,7 +46,8 @@ class MongoCollection<T extends Document = Document> extends AbstractCollection<
     document: UpdateFilter<T>,
     options?: UpdateOptions,
   ) {
-    return this.collection.updateOne(filter, this.appendUpdateTimestamp(document), options);
+    const collection = await this.collection;
+    return collection.updateOne(filter, this.appendUpdateTimestamp(document), options);
   }
 
   public async updateMany(
@@ -50,39 +55,47 @@ class MongoCollection<T extends Document = Document> extends AbstractCollection<
     document: UpdateFilter<T>,
     options?: UpdateOptions,
   ) {
-    return this.collection.updateMany(filter, this.appendUpdateTimestamp(document), options);
+    const collection = await this.collection;
+    return collection.updateMany(filter, this.appendUpdateTimestamp(document), options);
   }
 
   public async findOne(query: Filter<T>, options?: FindOptions) {
-    return this.collection.findOne(query, options);
+    const collection = await this.collection;
+    return collection.findOne(query, options);
   }
 
   public async find(query: Filter<T>, options?: FindOptions) {
-    const cursor = this.collection.find(query, options);
+    const collection = await this.collection;
+    const cursor = collection.find(query, options);
     return cursor.toArray();
   }
 
   public async countDocuments(query?: Filter<T>) {
-    return this.collection.countDocuments(query);
+    const collection = await this.collection;
+    return collection.countDocuments(query);
   }
 
   public async createIndex(
     fieldOrSpec: IndexSpecification,
     options?: CreateIndexesOptions,
   ) {
-    return this.collection.createIndex(fieldOrSpec, options);
+    const collection = await this.collection;
+    return collection.createIndex(fieldOrSpec, options);
   }
 
   public async dropIndex(indexName: string) {
-    await this.collection.dropIndex(indexName);
+    const collection = await this.collection;
+    await collection.dropIndex(indexName);
   }
 
   public async listIndexes() {
-    return this.collection.listIndexes().toArray();
+    const collection = await this.collection;
+    return collection.listIndexes().toArray();
   }
 
   public async drop() {
-    return this.collection.drop();
+    const collection = await this.collection;
+    return collection.drop();
   }
 
   private appendCreateTimestamp(doc: any) {
