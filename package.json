@@ -1,7 +1,7 @@
 {
   "name": "@s4p/smdb",
   "type": "module",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Subset of MongoDB's API (the most used operations)",
   "homepage": "https://github.com/demoshang/smdb",
   "repository": {
@@ -40,6 +40,7 @@
     "prettier": "prettier '**/*.{ts,json,md}'",
     "prettier:fix": "prettier --write '**/*.{ts,json,md}'"
   },
+  "dependencies": {},
   "optionalDependencies": {
     "@s4p/nedb": "^1.0.4",
     "mongodb": "^6.8.0"
