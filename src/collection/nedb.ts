@@ -192,9 +192,16 @@ class NedbCollection<T extends Document> extends Collection<T> {
   public async drop() {
     const collection = await this.collection;
 
+    collection.stopAutocompaction();
+
     await collection.dropDatabaseAsync();
     await collection.loadDatabaseAsync();
     return true;
+  }
+
+  public async disconnect() {
+    const collection = await this.collection;
+    collection.stopAutocompaction();
   }
 }
 
