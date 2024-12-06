@@ -1,8 +1,8 @@
 import type { Document } from '../collection';
-import { MongoCollection } from '../collection';
 import type { CollectionOptions, MongoClientOptions } from '../lib-types/mongo-type';
 import type { Client } from './client';
-import { type Deferred, defer } from '@/utils/promise';
+import { defer, type Deferred } from '@/utils/promise';
+import { MongoCollection } from '../collection';
 
 interface MClient {
   connect: (url: string, opts?: any) => Promise<any>;

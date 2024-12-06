@@ -16,4 +16,4 @@ function defer<T>() {
   return { promise, resolve: resolve!, reject: reject! };
 }
 
-export { Deferred, defer };
+export { defer, Deferred };

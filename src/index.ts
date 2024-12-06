@@ -51,4 +51,4 @@ class SubsetMongo {
   }
 }
 
-export { SubsetMongo, Collection, SubsetMongoUrl };
+export { Collection, SubsetMongo, SubsetMongoUrl };

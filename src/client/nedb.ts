@@ -1,8 +1,8 @@
-import { resolve as pathResolve } from 'node:path';
-
 import type { Document } from '../collection';
-import { NedbCollection } from '../collection/nedb';
+
 import type { Client } from './client';
+import { resolve as pathResolve } from 'node:path';
+import { NedbCollection } from '../collection/nedb';
 
 interface DataStoreOptions {
   inMemoryOnly?: boolean;
